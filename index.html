@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat con Socket.IO</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+    <!-- Agrega Bootstrap y jQuery -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Conexión de Socket.IO al servidor
+        var socket = io();
+
+
+
+        // Función para enviar mensajes del chat 1
+
+
+        function enviarMensaje1() {
+            var mensaje = document.getElementById('mensaje1').value;
+            socket.emit('chat message 1', mensaje);
+            document.getElementById('mensaje1').value = '';
+            return false;
+        }
+        function agregarMensaje(mensaje, imagenURL) {
+            var listaMensajes = document.getElementById('lista-mensajes');
+            var nuevoMensaje = document.createElement('div');
+            nuevoMensaje.className = 'message';
+            var fecha = new Date();
+            var hora = fecha.getHours();
+            var minutos = fecha.getMinutes();
+            var horaFormateada = hora + ':' + (minutos < 10 ? '0' : '') + minutos;
+            nuevoMensaje.innerHTML = `
+            <div class="avatar">A</div>
+        <div class="text">${mensaje}</div>
+        <div class="hora">${horaFormateada}</div>
+    `;
+            listaMensajes.appendChild(nuevoMensaje);
+        }
+
+
+        // Función para recibir mensajes del chat 1
+        socket.on('chat message 1', function (msg) {
+            agregarMensaje(msg);
+        });
+
+
+        // Función para enviar mensajes del chat 2
+        function enviarMensaje2() {
+            var mensaje = document.getElementById('mensaje2').value;
+            socket.emit('chat message 2', mensaje);
+            document.getElementById('mensaje2').value = '';
+            return false;
+        }
+        function agregarMensaje2(mensaje) {
+            var listaMensajes = document.getElementById('lista-mensajes');
+            var nuevoMensaje = document.createElement('div');
+            nuevoMensaje.className = 'message chat2';
+            var fecha = new Date();
+            var hora = fecha.getHours();
+            var minutos = fecha.getMinutes();
+            var horaFormateada = hora + ':' + (minutos < 10 ? '0' : '') + minutos;
+            nuevoMensaje.innerHTML = `
+            <div class="avatar">B</div>
+        <div class="text">${mensaje}</div>
+        <div class="hora">${horaFormateada}</div>
+        
+    `;
+            listaMensajes.appendChild(nuevoMensaje);
+        }
+
+
+        // Función para recibir mensajes del chat 2
+        socket.on('chat message 2', function (msg) {
+            agregarMensaje2(msg)
+
+        });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-header {
+            background-color: #128c7e;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .chat-messages {
+            padding: 10px;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .message .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #128c7e;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .message .text {
+            background-color: #e5e5ea;
+            border-radius: 10px;
+            padding: 10px;
+            max-width: 70%;
+        }
+
+        .message .text.sent {
+            background-color: #dcf8c6;
+            align-self: flex-end;
+        }
+
+        /* Estilo para mensajes del chat 2 */
+        .message.chat2 {
+            justify-content: flex-end;
+        }
+
+        .message.chat2 .avatar {
+            margin-left: 10px;
+            /* Espacio entre el avatar y el mensaje del chat 2 */
+            margin-right: 0;
+            /* Elimina el margen derecho del avatar del chat 2 */
+        }
+
+        .message.chat2 .text {
+            background-color: #dcf8c6;
+            /* Color de fondo del chat 2 */
+            color: #000;
+            /* Color del texto del chat 2 */
+        }
+
+        .message.chat2 .text.sent {
+            background-color: #128c7e;
+            /* Color de fondo del mensaje enviado en el chat 2 */
+            color: #fff;
+            /* Color del texto del mensaje enviado en el chat 2 */
+        }
+
+        .input-container {
+            display: flex;
+            background-color: #fff;
+            border-top: 1px solid #e0e0e0;
+            padding: 10px;
+        }
+
+        .input-container form {
+            display: flex;
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .input-container input[type="text"] {
+            flex-grow: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .input-container button {
+            background-color: #128c7e;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .message .hora {
+            font-size: 12px;
+            /* Tamaño de fuente más pequeño para la hora */
+            color: rgba(0, 0, 0, 0.5);
+            /* Color negro transparente para la hora */
+            margin-top: 5px;
+            /* Espacio entre el mensaje y la hora */
+        }
+
+        .message.chat2 .hora {
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.5);
+            margin-top: 5px;
+        }
+
+
+
+
+
+
+        /* Estilo para el botón personalizado */
+        .custom-upload-button {
+            display: inline-block;
+            background-color: #128c7e;
+            /* Color de fondo del botón */
+            color: #fff;
+            /* Color del texto del botón */
+            padding: 10px 10px;
+            /* Espaciado interno del botón */
+            border-radius: 50%;
+            /* Forma de círculo */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .custom-upload-button:hover {
+            background-color: #0a6d60;
+            /* Cambiar el color de fondo al pasar el mouse */
+        }
+
+        /* Ocultar el input de archivo predeterminado */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container">
+        
+        <div class="chat-header">Chat de WhatsApp</div>
+        <div class="chat-messages" id="lista-mensajes">
+
+
+        </div>
+        <div class="input-container">
+            <form onsubmit="return enviarMensaje1()">
+
+                <input type="text" placeholder="Escribe un mensaje" id="mensaje1" autocomplete="off">
+
+                <button><i class="fas fa-paper-plane"></i></button>
+            </form>
+            <form onsubmit="return enviarMensaje2()">
+
+                <input type="text" placeholder="Escribe un mensaje" id="mensaje2" autocomplete="off">
+                <button><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+
+</body>
+
+
+</html>
